@@ -21,6 +21,7 @@ async def promocode_tiket(callback: types.CallbackQuery):
     db_cur.close()
     db_conn.close()
 
+
     @router.message(F.text)
     async def prom_1(message: types.Message):
         if message.text in promocode:
