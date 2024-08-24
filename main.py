@@ -221,6 +221,7 @@ async def main():
     await dp.start_polling(bot)
 
 
+
 if __name__ == "__main__":
     dp.include_router(hendler.router)
     dp.include_router(pay_hendler.router)
