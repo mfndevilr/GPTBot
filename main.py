@@ -20,6 +20,40 @@ print('Бот работает✅')
 
 @dp.message(CommandStart())
 async def cmd_start(message: types.Message):
+    # Создание базы данных
+    db_conn = sq3.connect("user_baze.db3")
+    # Создание курсора
+    db_cur = db_conn.cursor()
+    query = "SELECT id FROM employees;"
+    db_cur.execute(query)
+    rows = db_cur.fetchall()
+    token_user = []
+
+    for row in rows:
+        token_user.append(row[0])
+    db_conn.commit()
+    db_cur.close()
+    db_conn.close()
+
+    if message.from_user.id in token_user:
+        pass
+    else:
+        refer = message.text[7:]
+        conn = sq3.connect('user_baze.db3')
+        cur = conn.cursor()
+        query = "SELECT * FROM employees WHERE id = ?"
+        cur.execute(query, (f'{refer}',))
+        rows = cur.fetchall()
+        token_user = []
+        for row in rows:
+            print(row)
+            token_user.append(row[-1])
+        cur.execute(
+            f"UPDATE employees SET token = '{token_user[0] + int(5)}' WHERE id = '{refer}'")
+        conn.commit()
+        cur.close()
+        conn.close()
+
     user_channel_status = await bot.get_chat_member(chat_id='@prostochatgpt', user_id=message.from_user.id)
     if user_channel_status.status != 'left':
         await message.answer(text=f'Привет {message.from_user.full_name} надеюсь тебе понравится бот',
@@ -70,6 +104,7 @@ async def cmd_start(message: types.Message):
     else:
         await message.answer('Чтобы пользоваться ботом, необходимо присоединиться к канал', reply_markup=keyboard.subscribe_menu)
 
+
 # @dp.inline_query()
 # async def handle_inline_query(query: types.InlineQuery):
 #     requestgpt = query.query
@@ -95,7 +130,7 @@ async def cmd_start(message: types.Message):
 
 @dp.callback_query(F.data == 'chatgpt')
 async def gen_chatgpt(callback: types.CallbackQuery):
-    await callback.message.answer(text='Введи свой запрос')
+    await callback.message.answer(text='Введите свой запрос')
 
     @dp.message(F.text)
     async def request_gpt(message: types.Message):

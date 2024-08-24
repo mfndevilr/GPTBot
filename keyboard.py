@@ -19,10 +19,10 @@ reply_menu = ReplyKeyboardMarkup(keyboard=[
 
 tiket_menu = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text='Покупка', callback_data='pay_tiket')],
-        [InlineKeyboardButton(text='Задания', callback_data='tasks_tiket')],
-        [InlineKeyboardButton(text='Промокод', callback_data='promocode_tiket')],
-        [InlineKeyboardButton(text='Пригласить друзей', callback_data='invite_tiket')]
+        [InlineKeyboardButton(text='Покупка💳', callback_data='pay_tiket')],
+        [InlineKeyboardButton(text='Задания💼', callback_data='tasks_tiket')],
+        [InlineKeyboardButton(text='Промокод🏷️', callback_data='promocode_tiket')],
+        [InlineKeyboardButton(text='Пригласить друзей👬', callback_data='invite_tiket')]
     ]
 )
 
@@ -50,7 +50,6 @@ pay_tiket_30 = InlineKeyboardMarkup(
         [InlineKeyboardButton(text='Оплатить 30🎟', callback_data='pay_tiket_30_pay')]
     ]
 )
-
 
 pay_tiket_50 = InlineKeyboardMarkup(
     inline_keyboard=[
@@ -82,12 +81,17 @@ admin_menu = InlineKeyboardMarkup(
          InlineKeyboardButton(text='Удалить администратора', callback_data='delete_admin')],
         [InlineKeyboardButton(text='Вывести список администраторов', callback_data='get_admins')],
         [InlineKeyboardButton(text='Рассылка', callback_data='send_notification'),
-         InlineKeyboardButton(text='Cписок пользователей', callback_data='get_users')]
+         InlineKeyboardButton(text='Cписок пользователей', callback_data='get_users')],
+        [InlineKeyboardButton(text='Добавить тикеты юзеру', callback_data='add_tiket_user'),]
     ]
 )
 
 
-
+tasks_menu = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text='Заданий пока нет❌', callback_data='no_tasks')]
+    ]
+)
 
 
 

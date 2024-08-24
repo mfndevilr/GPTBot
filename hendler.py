@@ -38,7 +38,6 @@ async def promocode_tiket(callback: types.CallbackQuery):
             cur.close()
             conn.close()
             await message.answer(text='Ваш баланс пополнился на 10🎟')
-
         else:
             await message.answer(text='Неверный промокод')
 
@@ -51,4 +50,10 @@ async def pay_tiket(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == 'tasks_tiket')
 async def tasks_tiket(callback: types.CallbackQuery):
-    await callback.message.answer(text='Нажми на кнопку "Выдать задания" и выполни его(если ничего не выводит значит заданий нет)')
+    await callback.message.answer(text='Выполнять задания и зарабатывай билеты 1 задание = 1 билет', reply_markup=keyboard.tasks_menu)
+
+
+@router.callback_query(F.data == 'invite_tiket')
+async def invite_tiket(callback: types.CallbackQuery):
+    link = f't.me/gptandpicturebot?start={callback.from_user.id}'
+    await callback.message.answer(text=f'Это твоя ссылка для приглашения друзей в канал: \n{link}')
