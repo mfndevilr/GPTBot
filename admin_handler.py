@@ -113,3 +113,24 @@ async def get_promocodes(callback: types.CallbackQuery):
 
 
 
+
+@router.callback_query(F.data == 'get_users')
+async def get_users(callback: types.CallbackQuery):
+    db_conn = sq3.connect("user_baze.db3")
+    # Создание курсора
+    db_cur = db_conn.cursor()
+    query = "SELECT id FROM employees;"
+    db_cur.execute(query)
+    rows = db_cur.fetchall()
+    token_user = []
+    for row in rows:
+        token_user.append(row[0])
+    db_conn.commit()
+    db_cur.close()
+    db_conn.close()
+    with open('user.txt', 'w') as file:
+        for user_id in token_user:
+            file.write(f"{user_id}\n")
+
+    await callback.message.answer_document(document='user.txt', caption='Список пользователей')
+
