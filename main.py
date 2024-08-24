@@ -21,7 +21,7 @@ print('Бот работает✅')
 @dp.message(CommandStart())
 async def cmd_start(message: types.Message):
     # Создание базы данных
-    db_conn = sq3.connect("user_baze.db3")
+    db_conn = sq3.connect("data/user_baze.db3")
     # Создание курсора
     db_cur = db_conn.cursor()
     query = "SELECT id FROM employees;"
@@ -39,7 +39,7 @@ async def cmd_start(message: types.Message):
         pass
     else:
         refer = message.text[7:]
-        conn = sq3.connect('user_baze.db3')
+        conn = sq3.connect('data/user_baze.db3')
         cur = conn.cursor()
         query = "SELECT * FROM employees WHERE id = ?"
         cur.execute(query, (f'{refer}',))
@@ -66,7 +66,7 @@ async def cmd_start(message: types.Message):
 
         try:
             # Создание базы данных
-            db_conn = sq3.connect("user_baze.db3")
+            db_conn = sq3.connect("data/user_baze.db3")
             # Создание курсора
             db_cur = db_conn.cursor()
 
@@ -134,7 +134,7 @@ async def gen_chatgpt(callback: types.CallbackQuery):
 
     @dp.message(F.text)
     async def request_gpt(message: types.Message):
-        conn = sq3.connect('user_baze.db3')
+        conn = sq3.connect('data/user_baze.db3')
         cur = conn.cursor()
         query = "SELECT * FROM employees WHERE id = ?"
         cur.execute(query, (f'{message.from_user.id}',))
@@ -178,7 +178,7 @@ async def images(callback: types.CallbackQuery):
 @dp.message(F.text == 'Профиль💁')
 async def profil(message: types.Message):
     # Создание базы данных
-    db_conn = sq3.connect("user_baze.db3")
+    db_conn = sq3.connect("data/user_baze.db3")
     # Создание курсора
     db_cur = db_conn.cursor()
     query = "SELECT * FROM employees WHERE id = ?"

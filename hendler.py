@@ -8,7 +8,7 @@ router = Router()
 @router.callback_query(F.data == 'promocode_tiket')
 async def promocode_tiket(callback: types.CallbackQuery):
     await callback.message.answer(text='Введите промокод выданный админом')
-    db_conn = sq3.connect("promocode_baze.db3")
+    db_conn = sq3.connect("data/promocode_baze.db3")
     # Создание курсора
     db_cur = db_conn.cursor()
     query = "SELECT promocode FROM employees;"
@@ -24,7 +24,7 @@ async def promocode_tiket(callback: types.CallbackQuery):
     @router.message(F.text)
     async def prom_1(message: types.Message):
         if message.text in promocode:
-            conn = sq3.connect('user_baze.db3')
+            conn = sq3.connect('data/user_baze.db3')
             cur = conn.cursor()
             query = "SELECT * FROM employees WHERE id = ?"
             cur.execute(query, (f'{message.from_user.id}',))

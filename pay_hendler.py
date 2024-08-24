@@ -115,7 +115,7 @@ async def star_payment(message: Message):
     # Извлекаем payload из успешного платежа
     payload = message.successful_payment.invoice_payload
 
-    conn = sq3.connect('user_baze.db3')
+    conn = sq3.connect('data/user_baze.db3')
     cur = conn.cursor()
     query = "SELECT * FROM employees WHERE id = ?"
     cur.execute(query, (f'{message.from_user.id}',))

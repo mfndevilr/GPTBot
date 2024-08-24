@@ -15,7 +15,7 @@ router = Router()
 @router.message(Command('adminpanel'))
 async def admin_panel(message: types.Message):
     # Создание базы данных
-    db_conn = sq3.connect("admin_baze.db3")
+    db_conn = sq3.connect("data/admin_baze.db3")
     # Создание курсора
     db_cur = db_conn.cursor()
     query = "SELECT admin_id FROM employees;"
@@ -46,7 +46,7 @@ async def add_admin(callback: types.CallbackQuery):
 
     @router.message(F.text)
     async def add_user_admin(message: types.Message):
-        db_conn = sq3.connect("admin_baze.db3")
+        db_conn = sq3.connect("data/admin_baze.db3")
         db_cur = db_conn.cursor()
         # db_cur.execute("""CREATE TABLE employees (
         # admin_id INTEGER
@@ -61,7 +61,7 @@ async def add_admin(callback: types.CallbackQuery):
 @router.callback_query(F.data == 'get_admins')
 async def get_admins(callback: types.CallbackQuery):
     # Создание базы данных
-    db_conn = sq3.connect("admin_baze.db3")
+    db_conn = sq3.connect("data/admin_baze.db3")
     # Создание курсора
     db_cur = db_conn.cursor()
     query = "SELECT admin_id FROM employees;"
@@ -81,7 +81,7 @@ async def add_promocode(callback: types.CallbackQuery):
 
     @router.message(F.text)
     async def add_user_promocode(message: types.Message):
-        db_conn = sq3.connect("promocode_baze.db3")
+        db_conn = sq3.connect("data/promocode_baze.db3")
         db_cur = db_conn.cursor()
         db_cur.execute("""CREATE TABLE employees (
         promocode TEXT
@@ -95,7 +95,7 @@ async def add_promocode(callback: types.CallbackQuery):
 @router.callback_query(F.data == 'get_promocodes')
 async def get_promocodes(callback: types.CallbackQuery):
     # Создание базы данных
-    db_conn = sq3.connect("promocode_baze.db3")
+    db_conn = sq3.connect("data/promocode_baze.db3")
     # Создание курсора
     db_cur = db_conn.cursor()
     query = "SELECT promocode FROM employees;"
@@ -113,7 +113,7 @@ async def get_promocodes(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == 'get_users')
 async def get_users(callback: types.CallbackQuery):
-    db_conn = sq3.connect("user_baze.db3")
+    db_conn = sq3.connect("data/user_baze.db3")
     # Создание курсора
     db_cur = db_conn.cursor()
     query = "SELECT id FROM employees;"
