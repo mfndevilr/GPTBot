@@ -112,6 +112,7 @@ async def get_promocodes(callback: types.CallbackQuery):
 
 
 
+
 @router.callback_query(F.data == 'get_users')
 async def get_users(callback: types.CallbackQuery):
     db_conn = sq3.connect("user_baze.db3")
