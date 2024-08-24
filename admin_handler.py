@@ -10,8 +10,6 @@ from secret import MASTER_ID
 router = Router()
 
 
-
-
 @router.message(Command('adminpanel'))
 async def admin_panel(message: types.Message):
     # Создание базы данных
@@ -108,7 +106,6 @@ async def get_promocodes(callback: types.CallbackQuery):
     db_cur.close()
     db_conn.close()
     await callback.message.answer(text=f'Список промокодов:\n{promocode}')
-
 
 
 @router.callback_query(F.data == 'get_users')

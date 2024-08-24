@@ -2,7 +2,6 @@ from aiogram import Router,types,F
 import keyboard
 import sqlite3 as sq3
 
-
 router = Router()
 
 @router.callback_query(F.data == 'promocode_tiket')
@@ -40,8 +39,6 @@ async def promocode_tiket(callback: types.CallbackQuery):
             await message.answer(text='Ваш баланс пополнился на 10🎟')
         else:
             await message.answer(text='Неверный промокод')
-
-
 
 @router.callback_query(F.data == 'pay_tiket')
 async def pay_tiket(callback: types.CallbackQuery):
