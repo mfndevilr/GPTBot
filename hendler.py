@@ -50,6 +50,7 @@ async def tasks_tiket(callback: types.CallbackQuery):
     await callback.message.answer(text='Выполнять задания и зарабатывай билеты 1 задание = 1 билет', reply_markup=keyboard.tasks_menu)
 
 
+
 @router.callback_query(F.data == 'invite_tiket')
 async def invite_tiket(callback: types.CallbackQuery):
     link = f't.me/gptandpicturebot?start={callback.from_user.id}'

@@ -175,6 +175,7 @@ async def add_tiket_user(callback: types.CallbackQuery):
         await callback.message.answer(text=f'Введите количество тикетов')
 
 
+
         @router.message(F.text)
         async def add_user_tikets(msg: types.Message):
             conn = sq3.connect('data/user_baze.db3')

@@ -29,6 +29,7 @@ async def cmd_start(message: types.Message):
     rows = db_cur.fetchall()
     token_user = []
 
+
     for row in rows:
         token_user.append(row[0])
     db_conn.commit()
