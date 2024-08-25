@@ -11,7 +11,7 @@
 
 1. **Клонируйте репозиторий:**
     ```bash
-    git clone https://github.com/mfndevilr/chatgpt.git
+    git clone https://github.com/mfndevilr/gptbot.git
     cd chatgpt-telegram-bot
     ```
 
