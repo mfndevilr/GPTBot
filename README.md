@@ -1,4 +1,3 @@
-
 ---
 
 # ChatGPT-4 Telegram Bot
@@ -11,8 +10,8 @@
 
 1. **Клонируйте репозиторий:**
     ```bash
-    git clone https://github.com/mfndevilr/gptbot.git
-    cd chatgpt-telegram-bot
+    git clone https://github.com/mfndevilr/GPTBot.git
+    cd GPTBot
     ```
 
 2. **Создайте виртуальное окружение и активируйте его:**
