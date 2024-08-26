@@ -196,6 +196,42 @@ async def add_tiket_user(callback: types.CallbackQuery):
 
 
 
+from aiogram.filters.state import StatesGroup, State
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.types import CallbackQuery
+
+
+storage = MemoryStorage()
+
+
+# Группа состояний для отправки сообщений пользователю
+class SendMessageStates(StatesGroup):
+    waiting_for_user_id = State()
+    waiting_for_message_text = State()
+
+
+@router.callback_query(F.data == 'send_message_user')
+async def send_message_user(callback: CallbackQuery, state: FSMContext):
+    await callback.message.answer(text='Введите ID пользователя')
+    await state.set_state(SendMessageStates.waiting_for_user_id)
+
+
+    @router.message(SendMessageStates.waiting_for_user_id, F.text)
+    async def get_user_id(message: types.Message, state: FSMContext):
+        await state.update_data(user_id=message.text)
+        await message.answer(text='Введите текст сообщения')
+        await state.set_state(SendMessageStates.waiting_for_message_text)
+
+
+        @router.message(SendMessageStates.waiting_for_message_text, F.text)
+        async def send_user_text(message: types.Message, state: FSMContext):
+            data = await state.get_data()
+            user_id = data['user_id']
+
+            await message.bot.send_message(chat_id=user_id, text=f'Ответ от поддержки: {message.text}')
+            await message.answer(text='Сообщение отправлено!')
+            await state.clear()
 
 
 

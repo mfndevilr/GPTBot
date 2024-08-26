@@ -131,5 +131,5 @@ async def star_payment(message: Message):
     cur.close()
     conn.close()
     await message.answer(text=f'Ваш баланс пополнился на {int(payload)}🎟')
-
+    await message.answer(text=f'Большое спасибо за покупку {message.from_user.full_name}!')
 

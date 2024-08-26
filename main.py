@@ -11,6 +11,8 @@ import hendler
 import pay_hendler
 import admin_handler
 from secret import token
+import datetime
+
 
 bot = Bot(token=token)
 
@@ -150,6 +152,7 @@ async def gen_chatgpt(callback: types.CallbackQuery):
             conn.close()
 
             requestgpt = message.text
+            await message.answer(text='Подождите, идет генерация...')
             client = Client()
             response = client.chat.completions.create(
                 # model="gpt-3.5-turbo",
@@ -160,6 +163,9 @@ async def gen_chatgpt(callback: types.CallbackQuery):
             await message.answer(text=answers_gpt)
         else:
             await message.answer(text='У вас недостаточно билетов. Пополните баланс!')
+            conn.commit()
+            cur.close()
+            conn.close()
 
 @dp.callback_query(F.data == 'images')
 async def images(callback: types.CallbackQuery):
@@ -188,13 +194,59 @@ async def profil(message: types.Message):
     token_user =[]
     for row in rows:
         token_user.append(row[-1])
+    db_conn.commit()
     db_cur.close()
     db_conn.close()
 
     await message.answer(text=f'Это ваш профиль.\n'
                               f'Ник: {message.from_user.full_name}\n'
                               f'ID: {message.from_user.id}\n'
-                              f'Количество билетов: {token_user[0]}🎟')
+                              f'Количество билетов: {token_user[0]}🎟\n\n'
+                              f'Если у вас меньше 3 билетов, вы можите раз в день получить 3 билета ',
+                         reply_markup=keyboard.profile_menu)
+
+
+
+
+# Словарь для хранения времени последнего получения билетов пользователями
+last_ticket_time = {}
+
+
+@dp.callback_query(F.data == 'get_tikets')
+async def get_tikets_evriday(callback: types.CallbackQuery):
+    user_id = callback.from_user.id
+    current_time = datetime.datetime.now()
+
+    if user_id in last_ticket_time:
+        time_diff = current_time - last_ticket_time[user_id]
+    else:
+        time_diff = datetime.timedelta(days=1)  # Если записи нет, разрешить получение билетов
+
+    if time_diff >= datetime.timedelta(days=1):
+        conn = sq3.connect('data/user_baze.db3')
+        cur = conn.cursor()
+        query = "SELECT * FROM employees WHERE id = ?"
+        cur.execute(query, (f'{callback.from_user.id}',))
+        rows = cur.fetchall()
+        token_user = []
+        for row in rows:
+            token_user.append(row[-1])
+
+        if token_user:
+            if token_user[0] < 3:
+                cur.execute(f"UPDATE employees SET token = '{token_user[0] + 3}' WHERE id = '{callback.from_user.id}'")
+                conn.commit()
+                await callback.message.answer(text='Вы успешно получили 3 билета!')
+            else:
+                await callback.message.answer(text='У вас вас больше 3 билетов. Вы не можете получить больше')
+        else:
+            await callback.message.answer(text='Ошибка...Проигнорируйте или напишите в поддержку')
+
+        cur.close()
+        conn.close()
+        last_ticket_time[user_id] = current_time
+    else:
+        await callback.message.answer(text='Вы уже получали билеты сегодня. Попробуйте снова завтра.')
 
 
 
