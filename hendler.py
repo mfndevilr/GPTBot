@@ -38,8 +38,12 @@ async def promocode_tiket(callback: types.CallbackQuery,  state: FSMContext):
 
 
 
+
     @router.message(F.text, SupportStates.waiting_for_message)
     async def prom_1(message: types.Message,  state: FSMContext):
+
+    @router.message(F.text)
+    async def prom_1(message: types.Message):
         if message.text in promocode:
             conn = sq3.connect('data/user_baze.db3')
             cur = conn.cursor()
