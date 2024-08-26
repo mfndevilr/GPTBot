@@ -36,7 +36,7 @@
 
 1. **Запустите бота:**
     ```bash
-    python python.py
+    python main.py
     ```
 
 2. **Начните общение с ботом в Telegram:**
