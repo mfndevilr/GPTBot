@@ -88,6 +88,7 @@ async def create_invoice(callback: types.CallbackQuery):
         payload="150"
     )
 
+
 @router.callback_query(F.data == 'pay_tiket_500')
 async def create_invoice(callback: types.CallbackQuery):
     pay_500 = LabeledPrice(label='500🎟', amount=250)
