@@ -34,6 +34,7 @@ async def promocode_tiket(callback: types.CallbackQuery,  state: FSMContext):
     db_conn.close()
     await state.set_state(SupportStatess.waiting_for_message)
 
+
     @router.message(F.text, SupportStates.waiting_for_message)
     async def prom_1(message: types.Message,  state: FSMContext):
         if message.text in promocode:
