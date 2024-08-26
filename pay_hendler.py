@@ -134,3 +134,4 @@ async def star_payment(message: Message):
     await message.answer(text=f'Большое спасибо за покупку {message.from_user.full_name}!')
 
 
+

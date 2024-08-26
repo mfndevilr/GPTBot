@@ -233,6 +233,7 @@ async def get_tikets_evriday(callback: types.CallbackQuery):
             token_user.append(row[-1])
 
 
+
         if token_user:
             if token_user[0] < 3:
                 cur.execute(f"UPDATE employees SET token = '{token_user[0] + 3}' WHERE id = '{callback.from_user.id}'")
