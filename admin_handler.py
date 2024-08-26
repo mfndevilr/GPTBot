@@ -5,6 +5,7 @@ import keyboard
 
 import sqlite3 as sq3
 from secret import MASTER_ID
+from aiogram.types import FSInputFile
 
 
 router = Router()
@@ -113,12 +114,12 @@ async def get_users(callback: types.CallbackQuery):
     db_conn = sq3.connect("data/user_baze.db3")
     # Создание курсора
     db_cur = db_conn.cursor()
-    query = "SELECT id FROM employees;"
+    query = "SELECT id,username FROM employees;"
     db_cur.execute(query)
     rows = db_cur.fetchall()
     token_user = []
     for row in rows:
-        token_user.append(row[0])
+        token_user.append(row)
     db_conn.commit()
     db_cur.close()
     db_conn.close()
@@ -126,5 +127,116 @@ async def get_users(callback: types.CallbackQuery):
         for user_id in token_user:
             file.write(f"{user_id}\n")
 
-    await callback.message.answer_document(document='user.txt', caption='Список пользователей')
+    await callback.message.reply_document(FSInputFile('user.txt'))
+
+
+
+@router.callback_query(F.data == 'send_notification')
+async def send_notification(callback: types.CallbackQuery):
+    db_conn = sq3.connect("data/admin_baze.db3")
+    db_cur = db_conn.cursor()
+    query = "SELECT admin_id FROM employees WHERE admin_id = ?"
+    db_cur.execute(query, (callback.from_user.id,))
+    admin = db_cur.fetchone()
+    db_cur.close()
+    db_conn.close()
+
+    if admin:
+        await callback.message.answer(text='Введите текст рассылки')
+
+        @router.message(F.content_type.in_({'text', 'photo'}))
+        async def send_text(message: types.Message):
+            if message.from_user.id == callback.from_user.id:
+                db_conn = sq3.connect("data/user_baze.db3")
+                db_cur = db_conn.cursor()
+                query = "SELECT id FROM employees;"
+                db_cur.execute(query)
+                rows = db_cur.fetchall()
+                for row in rows:
+                    user_id = row[0]
+                    if message.content_type == 'text':
+                        await message.bot.send_message(chat_id=user_id, text=message.text)
+                    elif message.content_type == 'photo':
+                        await message.bot.send_photo(chat_id=user_id, photo=message.photo[-1].file_id, caption=message.caption)
+                db_conn.commit()
+                db_cur.close()
+                db_conn.close()
+                await callback.message.answer(text='Рассылка отправлена')
+    else:
+        await callback.message.answer(text='У вас недостаточно прав!')
+
+@router.callback_query(F.data == 'add_tiket_user')
+async def add_tiket_user(callback: types.CallbackQuery):
+    await callback.message.answer(text='Введите ID пользователя')
+
+    @router.message(F.text)
+    async def add_user_tiket(message: types.Message):
+        id_user = message.text
+        await callback.message.answer(text=f'Введите количество тикетов')
+
+
+
+        @router.message(F.text)
+        async def add_user_tikets(msg: types.Message):
+            conn = sq3.connect('data/user_baze.db3')
+            cur = conn.cursor()
+            query = "SELECT * FROM employees WHERE id = ?"
+            cur.execute(query, (f'{id_user}',))
+            rows = cur.fetchall()
+            token_user = []
+            for row in rows:
+                print(row)
+                token_user.append(row[-1])
+            cur.execute(
+                f"UPDATE employees SET token = '{token_user[0] + int(msg.text)}' WHERE id = '{msg.from_user.id}'")
+            conn.commit()
+            cur.close()
+            conn.close()
+            await msg.answer(text=f'Количество тикетов у пользователя {id_user} изменено на {token_user[0] + int(msg.text)}')
+
+
+
+from aiogram.filters.state import StatesGroup, State
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.types import CallbackQuery
+
+
+
+
+
+
+storage = MemoryStorage()
+
+
+# Группа состояний для отправки сообщений пользователю
+class SendMessageStates(StatesGroup):
+    waiting_for_user_id = State()
+    waiting_for_message_text = State()
+
+
+@router.callback_query(F.data == 'send_message_user')
+async def send_message_user(callback: CallbackQuery, state: FSMContext):
+    await callback.message.answer(text='Введите ID пользователя')
+    await state.set_state(SendMessageStates.waiting_for_user_id)
+
+
+    @router.message(SendMessageStates.waiting_for_user_id, F.text)
+    async def get_user_id(message: types.Message, state: FSMContext):
+        await state.update_data(user_id=message.text)
+        await message.answer(text='Введите текст сообщения')
+        await state.set_state(SendMessageStates.waiting_for_message_text)
+
+
+        @router.message(SendMessageStates.waiting_for_message_text, F.text)
+        async def send_user_text(message: types.Message, state: FSMContext):
+            data = await state.get_data()
+            user_id = data['user_id']
+
+            await message.bot.send_message(chat_id=user_id, text=f'Ответ от поддержки: {message.text}')
+            await message.answer(text='Сообщение отправлено!')
+            await state.clear()
+
+
+
 

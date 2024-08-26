@@ -8,7 +8,7 @@ router = Router()
 
 @router.callback_query(F.data == 'pay_tiket_10')
 async def create_invoice_10(callback: types.CallbackQuery):
-    pay_10 = LabeledPrice(label='10🎟', amount=10)
+    pay_10 = LabeledPrice(label='10🎟', amount=5)
     await bot.send_invoice(
         callback.message.chat.id,
         title="Оплата",
@@ -26,7 +26,7 @@ async def create_invoice_10(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == 'pay_tiket_30')
 async def create_invoice_30(callback: types.CallbackQuery):
-    pay_30 = LabeledPrice(label='30🎟', amount=30)
+    pay_30 = LabeledPrice(label='30🎟', amount=15)
 
     await bot.send_invoice(
         callback.message.chat.id,
@@ -42,7 +42,7 @@ async def create_invoice_30(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == 'pay_tiket_50')
 async def create_invoice_50(callback: types.CallbackQuery):
-    pay_50 = LabeledPrice(label='50🎟', amount=50)
+    pay_50 = LabeledPrice(label='50🎟', amount=25)
 
     await bot.send_invoice(
         callback.message.chat.id,
@@ -58,7 +58,7 @@ async def create_invoice_50(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == 'pay_tiket_100')
 async def create_invoice(callback: types.CallbackQuery):
-    pay_100 = LabeledPrice(label='100🎟', amount=100)
+    pay_100 = LabeledPrice(label='100🎟', amount=50)
 
     await bot.send_invoice(
         callback.message.chat.id,
@@ -74,7 +74,7 @@ async def create_invoice(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == 'pay_tiket_150')
 async def create_invoice(callback: types.CallbackQuery):
-    pay_150 = LabeledPrice(label='150🎟', amount=150)
+    pay_150 = LabeledPrice(label='150🎟', amount=75)
 
     await bot.send_invoice(
         callback.message.chat.id,
@@ -88,9 +88,10 @@ async def create_invoice(callback: types.CallbackQuery):
         payload="150"
     )
 
+
 @router.callback_query(F.data == 'pay_tiket_500')
 async def create_invoice(callback: types.CallbackQuery):
-    pay_500 = LabeledPrice(label='500🎟', amount=500)
+    pay_500 = LabeledPrice(label='500🎟', amount=250)
 
     await bot.send_invoice(
         callback.message.chat.id,
@@ -115,6 +116,7 @@ async def star_payment(message: Message):
     # Извлекаем payload из успешного платежа
     payload = message.successful_payment.invoice_payload
 
+
     conn = sq3.connect('data/user_baze.db3')
     cur = conn.cursor()
     query = "SELECT * FROM employees WHERE id = ?"
@@ -129,5 +131,8 @@ async def star_payment(message: Message):
     cur.close()
     conn.close()
     await message.answer(text=f'Ваш баланс пополнился на {int(payload)}🎟')
+    await message.answer(text=f'Большое спасибо за покупку {message.from_user.full_name}!')
+
+
 
 

@@ -14,7 +14,8 @@ subscribe_menu = InlineKeyboardMarkup(
 
 reply_menu = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text='Профиль💁'), KeyboardButton(text='Главная🏠')],
-    [KeyboardButton(text='Получить билеты🏦')]
+    [KeyboardButton(text='Получить билеты🏦')],
+    [KeyboardButton(text='Поддержка🧑‍🔧')]
 ], resize_keyboard=True)
 
 tiket_menu = InlineKeyboardMarkup(
@@ -29,12 +30,12 @@ tiket_menu = InlineKeyboardMarkup(
 
 pay_menu = InlineKeyboardMarkup(
     inline_keyboard=[
-        [InlineKeyboardButton(text='10🎟',callback_data='pay_tiket_10')],
-        [InlineKeyboardButton(text='30🎟',callback_data='pay_tiket_30')],
-        [InlineKeyboardButton(text='50🎟',callback_data='pay_tiket_50')],
-        [InlineKeyboardButton(text='100🎟',callback_data='pay_tiket_100')],
-        [InlineKeyboardButton(text='150🎟',callback_data='pay_tiket_150')],
-        [InlineKeyboardButton(text='500🎟',callback_data='pay_tiket_500')],
+        [InlineKeyboardButton(text='10🎟',callback_data='pay_tiket_10'),
+        InlineKeyboardButton(text='30🎟',callback_data='pay_tiket_30')],
+        [InlineKeyboardButton(text='50🎟',callback_data='pay_tiket_50'),
+        InlineKeyboardButton(text='100🎟',callback_data='pay_tiket_100')],
+        [InlineKeyboardButton(text='150🎟',callback_data='pay_tiket_150'),
+        InlineKeyboardButton(text='500🎟',callback_data='pay_tiket_500')],
     ]
 )
 
@@ -82,13 +83,10 @@ admin_menu = InlineKeyboardMarkup(
         [InlineKeyboardButton(text='Вывести список администраторов', callback_data='get_admins')],
         [InlineKeyboardButton(text='Рассылка', callback_data='send_notification'),
          InlineKeyboardButton(text='Cписок пользователей', callback_data='get_users')],
-        [InlineKeyboardButton(text='Добавить тикеты юзеру', callback_data='add_tiket_user'),]
+        [InlineKeyboardButton(text='Добавить тикеты юзеру', callback_data='add_tiket_user')],
+        [InlineKeyboardButton(text='Написать пользавателю(Поддержка)', callback_data='send_message_user')],
     ]
 )
-
-
-
-
 
 
 
@@ -98,5 +96,14 @@ tasks_menu = InlineKeyboardMarkup(
     ]
 )
 
+profile_menu = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text='Получить билеты', callback_data='get_tikets')]
+    ]
+)
 
-
+support_menu = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text='Закончить сессию', callback_data='logout')]
+    ]
+)
