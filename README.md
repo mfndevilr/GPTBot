@@ -1,6 +1,6 @@
 ---
 
-# ChatGPT-4 Telegram Bot
+# ChatGPT-4 Telegram Bot(что я накодил боже мой)
 
 ## Описание
 
